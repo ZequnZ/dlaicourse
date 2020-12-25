@@ -34,6 +34,9 @@ class Classifier(assetManager: AssetManager, modelPath: String, labelPath: Strin
     }
 
     init {
+        /**
+        * Set the interpreter's options
+        */
         val options = Interpreter.Options()
         options.setNumThreads(5)
         options.setUseNNAPI(true)
@@ -42,11 +45,23 @@ class Classifier(assetManager: AssetManager, modelPath: String, labelPath: Strin
     }
 
     private fun loadModelFile(assetManager: AssetManager, modelPath: String): MappedByteBuffer {
+        /**
+        * Get the file descriptor of the model file
+        */
         val fileDescriptor = assetManager.openFd(modelPath)
+        /**
+        * Open the input inputStream
+        */
         val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+        /**
+        * Read the fiule channels along with its offset and length as follows
+        */
         val fileChannel = inputStream.channel
         val startOffset = fileDescriptor.startOffset
         val declaredLength = fileDescriptor.declaredLength
+        /**
+        * Load the tf lite model
+        */
         return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
     }
 
